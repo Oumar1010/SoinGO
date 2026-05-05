@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { MapPinIcon } from '@heroicons/react/24/outline';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function CartePage() {
   const { user, api } = useAuth();

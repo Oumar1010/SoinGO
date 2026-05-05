@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { CheckCircleIcon, ClockIcon, XCircleIcon, PlayIcon } from '@heroicons/react/24/outline';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../contexts/AuthContext';
 
 const STATUS_ICON: Record<string, any> = {
   PLANIFIE:  { Icon: ClockIcon,        color: 'text-primary',  bg: 'bg-blue-50' },

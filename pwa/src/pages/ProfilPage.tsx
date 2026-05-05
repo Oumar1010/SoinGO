@@ -1,5 +1,5 @@
 import { UserCircleIcon, ArrowRightOnRectangleIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../contexts/AuthContext';
 
 const ROLE_LABELS: Record<string, string> = {
   ADMIN: 'Administrateur',
