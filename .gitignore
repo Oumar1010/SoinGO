@@ -37,8 +37,8 @@ Thumbs.db
 # Testing
 coverage/
 
-# Prisma
-backend/prisma/migrations/
+# Prisma — ne pas ignorer les migrations (elles sont versionnées)
+# backend/prisma/migrations/
 
 # TypeScript
 *.tsbuildinfo

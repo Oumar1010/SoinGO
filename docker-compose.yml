@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: soingo_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: soingo
+      POSTGRES_USER: soingo
+      POSTGRES_PASSWORD: soingo_dev_2025
+    ports:
+      - "5432:5432"
+    volumes:
+      - soingo_pgdata:/var/lib/postgresql/data
+
+volumes:
+  soingo_pgdata:
