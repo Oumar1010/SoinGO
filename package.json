@@ -1,0 +1,14 @@
+{
+  "name": "soingo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SainGo — SaaS soins à domicile (monorepo)",
+  "scripts": {
+    "backend":  "npm --prefix backend run start:dev",
+    "frontend": "npm --prefix frontend run dev",
+    "pwa":      "npm --prefix pwa run dev",
+    "install:all": "npm --prefix backend install && npm --prefix frontend install && npm --prefix pwa install",
+    "build:all": "npm --prefix backend run build && npm --prefix frontend run build && npm --prefix pwa run build"
+  },
+  "workspaces": ["backend", "frontend", "pwa"]
+}

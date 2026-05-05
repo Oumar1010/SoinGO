@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  COORDO
+  AIDE_SOIGNANT
+}
+
+enum VisitStatus {
+  PLANIFIE
+  EN_COURS
+  TERMINE
+  ANNULE
+}
+
+model User {
+  id           String   @id @default(cuid())
+  nom          String
+  email        String   @unique
+  role         Role     @default(AIDE_SOIGNANT)
+  hash_mdp     String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  visits       Visit[]
+  routes       Route[]
+}
+
+model Patient {
+  id           String   @id @default(cuid())
+  nom          String
+  address_raw  String
+  lat          Float?
+  lng          Float?
+  access_info  String?
+  telephone    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  visits       Visit[]
+}
+
+model Visit {
+  id               String      @id @default(cuid())
+  patientId        String
+  aideSoignantId   String
+  dateHeure        DateTime
+  duree            Int         // minutes
+  statut           VisitStatus @default(PLANIFIE)
+  notes            String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  patient          Patient     @relation(fields: [patientId], references: [id])
+  aideSoignant     User        @relation(fields: [aideSoignantId], references: [id])
+  route            RouteVisit[]
+}
+
+model Route {
+  id              String   @id @default(cuid())
+  aideSoignantId  String
+  date            DateTime
+  distanceTotale  Float?   // km
+  tempsTotalMin   Int?     // minutes
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  aideSoignant    User        @relation(fields: [aideSoignantId], references: [id])
+  visits          RouteVisit[]
+}
+
+model RouteVisit {
+  id       String @id @default(cuid())
+  routeId  String
+  visitId  String
+  ordre    Int
+
+  route    Route  @relation(fields: [routeId], references: [id])
+  visit    Visit  @relation(fields: [visitId], references: [id])
+
+  @@unique([routeId, visitId])
+}

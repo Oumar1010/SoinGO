@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { -webkit-tap-highlight-color: transparent; }
+  body { @apply bg-neutral font-sans text-gray-800 select-none; }
+}
+
+@layer components {
+  .btn {
+    @apply flex items-center justify-center gap-3 rounded-2xl font-semibold text-lg
+           min-h-[60px] px-6 active:scale-95 transition-all duration-150;
+  }
+  .btn-primary { @apply btn bg-primary text-white; }
+  .btn-accent  { @apply btn bg-accent  text-white; }
+  .btn-success { @apply btn bg-success text-white; }
+  .btn-ghost   { @apply btn bg-white text-gray-700 border border-gray-200; }
+  .card        { @apply bg-white rounded-2xl shadow-sm p-5; }
+  .nav-tab     { @apply flex flex-col items-center gap-1 flex-1 py-3 text-xs font-medium transition-colors; }
+}
