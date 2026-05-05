@@ -4,15 +4,17 @@ import {
   UserGroupIcon,
   CalendarIcon,
   MapIcon,
+  UsersIcon,
   ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../hooks/useAuth';
 
 const nav = [
   { to: '/dashboard', label: 'Tableau de bord', Icon: HomeIcon },
-  { to: '/patients', label: 'Patients', Icon: UserGroupIcon },
-  { to: '/visits', label: 'Visites', Icon: CalendarIcon },
-  { to: '/map', label: 'Carte', Icon: MapIcon },
+  { to: '/visits',    label: 'Visites',          Icon: CalendarIcon },
+  { to: '/patients',  label: 'Patients',         Icon: UserGroupIcon },
+  { to: '/map',       label: 'Carte',            Icon: MapIcon },
+  { to: '/users',     label: 'Équipe',           Icon: UsersIcon },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {

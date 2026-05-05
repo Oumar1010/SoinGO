@@ -5,6 +5,7 @@ import DashboardPage from './pages/DashboardPage';
 import PatientsPage from './pages/PatientsPage';
 import VisitsPage from './pages/VisitsPage';
 import MapPage from './pages/MapPage';
+import UsersPage from './pages/UsersPage';
 import Layout from './components/Layout';
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/patients" element={<PatientsPage />} />
         <Route path="/visits" element={<VisitsPage />} />
         <Route path="/map" element={<MapPage />} />
+        <Route path="/users" element={<UsersPage />} />
       </Routes>
     </Layout>
   );
