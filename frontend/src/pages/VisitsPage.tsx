@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { PlusIcon, CalendarIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, CalendarIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import api from '../services/api';
+import { exportTourneePDF } from '../services/pdf';
 
 const STATUS_LABELS: Record<string, string> = {
   PLANIFIE: 'Planifié',
@@ -56,10 +57,21 @@ export default function VisitsPage() {
             className="px-3 py-2 rounded-xl border border-gray-200 text-sm"
           />
         </div>
-        <button onClick={() => setShowForm(!showForm)} className="btn-primary">
-          <PlusIcon className="w-5 h-5" />
-          Planifier
-        </button>
+        <div className="flex gap-2">
+          {visits.length > 0 && (
+            <button
+              onClick={() => exportTourneePDF(date, visits)}
+              className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 text-gray-600 hover:bg-neutral font-medium text-sm"
+            >
+              <ArrowDownTrayIcon className="w-4 h-4" />
+              PDF
+            </button>
+          )}
+          <button onClick={() => setShowForm(!showForm)} className="btn-primary">
+            <PlusIcon className="w-5 h-5" />
+            Planifier
+          </button>
+        </div>
       </div>
 
       {showForm && (
