@@ -7,7 +7,7 @@ import {
   UsersIcon,
   ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../contexts/AuthContext';
 
 const nav = [
   { to: '/dashboard', label: 'Tableau de bord', Icon: HomeIcon },
