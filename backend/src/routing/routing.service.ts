@@ -87,9 +87,9 @@ export class RoutingService {
         toIndex:     i + 1,
         fromPatient: orderedVisits[i].patient.nom,
         toPatient:   orderedVisits[i + 1].patient.nom,
-        distanceM,
+        distanceM:   distM,
         distanceKm:  +(distM / 1000).toFixed(2),
-        durationS,
+        durationS:   durS,
         durationMin: Math.round(durS / 60),
       });
     }

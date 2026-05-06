@@ -95,14 +95,23 @@ export default function MapPage() {
     setOptimizing(true);
     setError('');
     setSelected(null);
+    setResult(null);
     try {
       const { data } = await api.post('/routes/optimize', {
         aideSoignantId: user?.id || eligible[0]?.aideSoignantId,
         date: today,
         visitIds: eligible.map(v => v.id),
       });
+      // Diagnostic : structure réelle de la réponse backend
+      console.log('[SoinGo] /routes/optimize response:', JSON.stringify(data, null, 2));
+      if (!data?.orderedVisits || !Array.isArray(data.orderedVisits)) {
+        console.error('[SoinGo] orderedVisits manquant dans la réponse:', data);
+        setError('Réponse inattendue du serveur — vérifier les logs backend');
+        return;
+      }
       setResult(data as RouteResult);
     } catch (e: any) {
+      console.error('[SoinGo] optimize error:', e);
       setError(e.response?.data?.message || 'Erreur lors de l\'optimisation');
     } finally {
       setOptimizing(false);
@@ -111,10 +120,10 @@ export default function MapPage() {
 
   // Zoom sur tous les marqueurs après chargement du résultat
   useEffect(() => {
-    if (!mapRef || !result || result.orderedVisits.length === 0) return;
+    if (!mapRef || !orderedVisits.length) return;
     try {
       const bounds = new window.google.maps.LatLngBounds();
-      result.orderedVisits.forEach(v => {
+      orderedVisits.forEach(v => {
         if (v.patient.lat && v.patient.lng)
           bounds.extend({ lat: v.patient.lat, lng: v.patient.lng });
       });
@@ -124,11 +133,13 @@ export default function MapPage() {
 
   const onLoad = useCallback((m: google.maps.Map) => setMapRef(m), []);
 
-  const routeCoords = (result?.orderedVisits ?? [])
+  const orderedVisits = result?.orderedVisits ?? [];
+
+  const routeCoords = orderedVisits
     .filter(v => v.patient.lat && v.patient.lng)
     .map(v => ({ lat: v.patient.lat!, lng: v.patient.lng! }));
 
-  const tempsSoinsMin = (result?.orderedVisits ?? []).reduce((a, v) => a + (v.duree ?? 0), 0);
+  const tempsSoinsMin = orderedVisits.reduce((a, v) => a + (v.duree ?? 0), 0);
 
   return (
     <div className="space-y-5">
@@ -143,7 +154,7 @@ export default function MapPage() {
           {result && (
             <button
               onClick={() => exportTourneePDF(today,
-                result.orderedVisits.map(v => ({ dateHeure: v.dateHeure, duree: v.duree, statut: v.statut, patient: v.patient })),
+                orderedVisits.map(v => ({ dateHeure: v.dateHeure, duree: v.duree, statut: v.statut, patient: v.patient })),
                 user?.nom
               )}
               className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 text-gray-600 hover:bg-neutral text-sm font-medium"
@@ -182,7 +193,7 @@ export default function MapPage() {
           >
             {/* Marqueurs après optimisation */}
             {result
-              ? result.orderedVisits.map((v, i) =>
+              ? orderedVisits.map((v, i) =>
                   v.patient.lat && v.patient.lng ? (
                     <Marker
                       key={v.visitId}
@@ -276,7 +287,7 @@ export default function MapPage() {
             Schéma du parcours
           </p>
           <div className="flex items-start overflow-x-auto pb-3 gap-0">
-            {result.orderedVisits.map((v, i) => {
+            {orderedVisits.map((v, i) => {
               const color = COLORS[i % COLORS.length];
               const leg   = result.legs[i];
               return (
@@ -331,9 +342,9 @@ export default function MapPage() {
           <div className="col-span-2 card">
             <h3 className="font-semibold text-gray-700 mb-4">Itinéraire étape par étape</h3>
             <div className="space-y-0">
-              {result.orderedVisits.map((v, i) => {
+              {orderedVisits.map((v, i) => {
                 const color = COLORS[i % COLORS.length];
-                const leg   = result.legs[i];
+                const leg   = result?.legs?.[i];
                 return (
                   <div key={v.visitId}>
                     {/* Arrêt */}
@@ -348,7 +359,7 @@ export default function MapPage() {
                         >
                           {i + 1}
                         </div>
-                        {i < result.orderedVisits.length - 1 && (
+                        {i < orderedVisits.length - 1 && (
                           <div className="w-0.5 flex-1 mt-1 mb-0" style={{ backgroundColor: color, opacity: 0.2, minHeight: 16 }} />
                         )}
                       </div>
@@ -418,7 +429,7 @@ export default function MapPage() {
             <div className="card">
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Légende</p>
               <div className="space-y-2">
-                {result.orderedVisits.map((v, i) => (
+                {orderedVisits.map((v, i) => (
                   <div key={v.visitId} className="flex items-center gap-2">
                     <div
                       className="w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
